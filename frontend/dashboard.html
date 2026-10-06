@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель преподавателя — GITS</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <a href="/" class="logo">GITS</a>
+            <nav>
+                <button id="logout-btn" class="btn btn-outline">Выйти</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <div class="container">
+            <h1>Мои материалы</h1>
+
+            <section class="upload-section">
+                <h2>Загрузить новую лекцию</h2>
+                <form id="material-form">
+                    <div class="form-group">
+                        <label for="title">Название</label>
+                        <input type="text" id="title" name="title" required maxlength="200">
+                    </div>
+                    <div class="form-group">
+                        <label for="text">Текст лекции (от 50 до 10 000 символов)</label>
+                        <textarea id="text" name="text" rows="10" required
+                                  minlength="50" maxlength="10000"></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span> / 10 000
+                        </div>
+                    </div>
+                    <div id="material-error" class="error-message"></div>
+                    <div id="material-success" class="success-message"></div>
+                    <button type="submit" class="btn btn-primary">Сохранить материал</button>
+                </form>
+            </section>
+
+            <section class="materials-list">
+                <h2>Сохранённые материалы</h2>
+                <div id="materials-container">
+                    <p class="empty-state">Пока нет материалов. Загрузите первую лекцию.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
