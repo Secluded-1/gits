@@ -17,8 +17,8 @@
 - **Frontend:** HTML5, CSS3, Vanilla JS
 - **Auth:** bcrypt + JWT
 
-## Быстрый старт
-
+## старт
+https://gits-vm2h.onrender.com
 ### 1. Клонировать репозиторий
 
 ```bash
