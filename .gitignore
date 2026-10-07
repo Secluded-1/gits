@@ -20,3 +20,11 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# AI-модели (большие бинарные файлы)
+models/
+*.gguf
+
+# Тестовые файлы
+test_ai.py
+test_response.json

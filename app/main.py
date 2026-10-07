@@ -17,12 +17,13 @@ from app.auth import (
     hash_password, verify_password,
     create_access_token, decode_access_token,
 )
+from app.llm_service import generate_quiz
 
 
 app = FastAPI(
     title="GITS — Generator of Interactive Training Simulators",
     description="Веб-сервис генерации обучающих тренажёров на базе LLM",
-    version="0.1.0",
+    version="0.2.0",
 )
 
 
@@ -106,9 +107,10 @@ def login(data: UserLogin, db=Depends(get_db)):
     return TokenResponse(access_token=token)
 
 
-# ---------- Materials ----------
+# ---------- Вспомогательная функция ----------
 
 def _get_user_id(authorization: str, db):
+    """Извлекает user_id из JWT в заголовке Authorization."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Требуется авторизация")
     token = authorization.replace("Bearer ", "")
@@ -117,6 +119,8 @@ def _get_user_id(authorization: str, db):
         raise HTTPException(status_code=401, detail="Невалидный токен")
     return int(payload["sub"])
 
+
+# ---------- Materials ----------
 
 @app.post("/api/materials", response_model=MaterialOut)
 def create_material(
@@ -171,3 +175,33 @@ def list_materials(authorization: str = Header(None), db=Depends(get_db)):
         }
         for r in rows
     ]
+
+
+# ---------- AI Generation ----------
+
+@app.post("/api/generate")
+def generate(
+    data: MaterialCreate,
+    authorization: str = Header(None),
+    db=Depends(get_db),
+):
+    """
+    Принимает текст лекции → возвращает массив вопросов, сгенерированных LLM.
+    """
+    user_id = _get_user_id(authorization, db)
+
+    try:
+        quiz = generate_quiz(
+            text=data.text,
+            num_questions=5,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ошибка генерации: {str(e)}",
+        )
+
+    return {
+        "title": quiz.title,
+        "questions": [q.model_dump() for q in quiz.questions],
+    }
