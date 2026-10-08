@@ -41,14 +41,14 @@ if FRONTEND_DIR.exists():
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 
-# ---------- Health ----------
+#health
 
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "gits"}
 
 
-# ---------- HTML ----------
+#html
 
 @app.get("/")
 def index():
@@ -70,7 +70,7 @@ def dashboard_page():
     return FileResponse(FRONTEND_DIR / "dashboard.html")
 
 
-# ---------- Auth ----------
+#регестр
 
 @app.post("/api/auth/register", response_model=TokenResponse)
 def register(data: UserRegister, db=Depends(get_db)):
@@ -120,7 +120,7 @@ def _get_user_id(authorization: str, db):
     return int(payload["sub"])
 
 
-# ---------- Materials ----------
+#материалы
 
 @app.post("/api/materials", response_model=MaterialOut)
 def create_material(
@@ -177,7 +177,7 @@ def list_materials(authorization: str = Header(None), db=Depends(get_db)):
     ]
 
 
-# ---------- AI Generation ----------
+#ИИ
 
 @app.post("/api/generate")
 def generate(
